@@ -65,6 +65,27 @@ This project implements the **Authorization Code Flow** with OpenID Connect:
 7.  **Redirect to Frontend**: The API redirects the user back to the Frontend (`FRONTEND_CALLBACK_URL`), passing the `id_token` as a URL query parameter.
 8.  **Frontend Session**: The Frontend parses the token, stores it (e.g., in localStorage), and updates the UI to the authenticated state.
 
+### Flow Diagram
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant FE as Frontend
+    participant API as API
+    participant IDP as MindX IDP
+
+    U->>FE: Click Login
+    FE->>API: Redirect /api/auth/login
+    API->>IDP: Redirect to Authorize URL
+    IDP->>U: Show Login Page
+    U->>IDP: Enter Credentials
+    IDP->>API: Redirect with Code (callback)
+    API->>IDP: Exchange Code for Tokens
+    IDP-->>API: Return Access & ID Tokens
+    API->>FE: Redirect with ID Token
+    FE->>U: Show Authenticated Dashboard
+```
+
 ## Secrets Management
 
 > [!IMPORTANT]
