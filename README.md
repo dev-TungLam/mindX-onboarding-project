@@ -17,6 +17,54 @@ This project demonstrates a full-stack application deployed on Azure Kubernetes 
 - Azure CLI (`az`)
 - Access to the `mindxprobationarc` Azure Container Registry.
 
+## Setup
+
+### Environment Variables
+
+The application requires the following environment variables to be set for the API. You can create a `.env` file in the `api` directory based on the example below.
+
+**`api/.env`**:
+
+```env
+# Port for the API server (default: 3000)
+PORT=3000
+
+# MindX Identity Provider Configuration
+CLIENT_ID=mindx-onboarding
+CLIENT_SECRET=YOUR_ACTUAL_CLIENT_SECRET  # Required
+AUTH_ENDPOINT=https://id-dev.mindx.edu.vn/auth
+TOKEN_ENDPOINT=https://id-dev.mindx.edu.vn/token
+
+# Redirect URIs
+# URI where the IDP redirects back to the API with the auth code
+REDIRECT_URI=http://localhost:3000/api/auth/callback
+# URI where the API redirects the user's browser after successful login (with token)
+FRONTEND_CALLBACK_URL=http://localhost:5173/login/callback
+```
+
+### Production Configuration (Reference)
+
+For the deployed version, the following values were used:
+
+#### Redirect URIs
+| Variable | Production Value |
+| :--- | :--- |
+| `REDIRECT_URI` | `https://mindx-devtunglam.52.234.236.158.nip.io/api/auth/callback` |
+| `FRONTEND_CALLBACK_URL` | `https://mindx-devtunglam.52.234.236.158.nip.io/login/callback` |
+
+## Authentication Flow
+
+This project implements the **Authorization Code Flow** with OpenID Connect:
+
+1.  **Initiate Login**: User clicks "Login" on the frontend. The browser is redirected to the API's `/api/auth/login` endpoint.
+2.  **Redirect to IDP**: The API constructs the authorization URL and redirects the user to the MindX Identity Provider.
+3.  **User Authentication**: The user logs in with their credentials at the MindX IDP.
+4.  **Callback to API**: Upon success, the IDP redirects back to the API (`REDIRECT_URI`) with an authorization `code`.
+5.  **Token Exchange**: The API exchanges this `code` for an `access_token` and `id_token` by communicating directly with the IDP.
+6.  **Session Creation**: The API validates the tokens and creating a session (or passing the token forward).
+7.  **Redirect to Frontend**: The API redirects the user back to the Frontend (`FRONTEND_CALLBACK_URL`), passing the `id_token` as a URL query parameter.
+8.  **Frontend Session**: The Frontend parses the token, stores it (e.g., in localStorage), and updates the UI to the authenticated state.
+
 ## Secrets Management
 
 > [!IMPORTANT]
@@ -34,7 +82,6 @@ kubectl create secret generic api-secrets \
 ### 1. Build and Push Images
 
 **Web (Frontend)**:
-
 ```bash
 cd web
 docker build -t mindxprobationarc.azurecr.io/web:v8 .
@@ -42,7 +89,6 @@ docker push mindxprobationarc.azurecr.io/web:v8
 ```
 
 **API (Backend)**:
-
 ```bash
 cd api
 docker build -t mindxprobationarc.azurecr.io/api:v8 .
@@ -88,15 +134,17 @@ cd api && npm run dev
 
 ### Achievements
 
-- **Infrastructure:**
-  - Set up **Azure Kubernetes Service (AKS)** cluster.
-  - Configured **Ingress Controller** for external access.
-  - Implemented **HTTPS/SSL** with Cert-Manager and Let's Encrypt.
-- **Application:**
-  - Developed and containerized **Node.js/Express API** (Backend).
-  - Developed and containerized **React Web App** (Frontend).
-  - Deployed full-stack application to AKS.
-- **Authentication & Security:**
-  - Integrated **OpenID Connect** authentication (using MindX IDP).
-  - Secured API endpoints with JWT validation.
-  - Implemented protected routes on the Client.
+#### Infrastructure
+- Set up **Azure Kubernetes Service (AKS)** cluster.
+- Configured **Ingress Controller** for external access.
+- Implemented **HTTPS/SSL** with Cert-Manager and Let's Encrypt.
+
+#### Application
+- Developed and containerized **Node.js/Express API** (Backend).
+- Developed and containerized **React Web App** (Frontend).
+- Deployed full-stack application to AKS.
+
+#### Authentication & Security
+- Integrated **OpenID Connect** authentication (using MindX IDP).
+- Secured API endpoints with JWT validation.
+- Implemented protected routes on the Client.
