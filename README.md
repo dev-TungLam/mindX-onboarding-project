@@ -235,4 +235,22 @@ Alerts are configured to obtain emails for:
     - **Realtime**: To see current active users.
     - **Life Cycle > Engagement > Pages and screens**: To view page view counts (`/login`, `/`, etc.).
 
+### Testing
+To trigger the alerts, use the following debug endpoints (available in local and dev):
+
+1. **Trigger "High Failed Requests" & "Exceptions"**:
+   ```bash
+   curl http://localhost:3000/debug/error
+   ```
+   *Action*: Throws a 500 error.
+   *Wait*: ~5-10 mins for App Insights to aggregate.
+
+2. **Trigger "High Response Time"**:
+   ```bash
+   curl http://localhost:3000/debug/slow
+   ```
+   *Action*: Delays response by 2 seconds.
+   *Wait*: ~5-10 mins for App Insights to see the average spike.
+
+
 

@@ -4,6 +4,7 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 import * as appInsights from "applicationinsights";
 import { MainRouter } from "./routes";
+import { DebugRouter } from "./routes/debug";
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ class App {
 
   private initializeRoutes() {
     this.app.use("/api", new MainRouter().router);
+    this.app.use("/debug", new DebugRouter().router);
     this.app.use("/", new MainRouter().router);
 
     // Root endpoint for simple verification
