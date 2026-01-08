@@ -1,22 +1,12 @@
+import "./instrumentation"; // Must be first
 import express, { Application } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
-import * as appInsights from "applicationinsights";
 import { MainRouter } from "./routes";
 import { DebugRouter } from "./routes/debug";
 
 dotenv.config();
-
-// Initialize Azure Application Insights
-if (process.env.APP_INSIGHTS_CONNECTION_STRING) {
-  appInsights.setup(process.env.APP_INSIGHTS_CONNECTION_STRING)
-    .setAutoCollectConsole(true, true)
-    .setAutoCollectExceptions(true)
-    .setAutoCollectRequests(true)
-    .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
-    .start();
-}
 
 class App {
   public app: Application;
