@@ -169,3 +169,62 @@ cd api && npm run dev
 - Integrated **OpenID Connect** authentication (using MindX IDP).
 - Secured API endpoints with JWT validation.
 - Implemented protected routes on the Client.
+
+## Week 2: Production & Product Metrics
+
+**Status:** Completed ✅
+
+### Achievements
+
+#### Production Metrics (Azure App Insights)
+- Integrated **Application Insights** with the API.
+- Configured logging for Requests, Exceptions, and System performance.
+
+#### Product Metrics (Google Analytics)
+- Integrated **Google Analytics 4** with the Frontend.
+- Implemented **Page View Tracking** on route changes.
+
+### Configuration
+
+#### Credentials
+Add the following to your `.env` files:
+
+**API (`api/.env`):**
+```env
+APP_INSIGHTS_CONNECTION_STRING='InstrumentationKey=...'
+```
+
+**Web (`web/.env`):**
+```env
+VITE_GA_MEASUREMENT_ID='G-...'
+```
+
+#### Alerts
+To setup recommended alerts on Azure:
+
+1. Go to **Monitor** > **Alerts** in Azure Portal.
+2. Create a new Alert Rule for the App Insights resource.
+3. Signals to monitor:
+    - **Failed Requests**: Count > 0 (Severity: High)
+    - **Server Response Time**: Average > 1s (Severity: Warning)
+    - **Exceptions**: Count > 5 (Severity: High)
+
+### Verification & Access
+
+#### Azure App Insights (Production Metrics)
+1. Log in to the [Azure Portal](https://portal.azure.com).
+2. Navigate to your **Application Insights** resource.
+3. Access:
+    - **Live Metrics**: For real-time monitoring of requests and failures.
+    - **Transaction Search**: To view specific logs and traces.
+    - **Failures**: To diagnose exceptions.
+    - **Performance**: To analyze server response times.
+
+#### Google Analytics (Product Metrics)
+1. Go to [Google Analytics](https://analytics.google.com).
+2. Select the property corresponding to the Measurement ID.
+3. Access:
+    - **Realtime**: To see current active users.
+    - **Life Cycle > Engagement > Pages and screens**: To view page view counts (`/login`, `/`, etc.).
+
+

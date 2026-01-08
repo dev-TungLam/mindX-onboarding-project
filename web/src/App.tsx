@@ -4,10 +4,12 @@ import {
   Routes,
   Route,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { LoginCallback } from "./pages/LoginCallback";
 import "./App.css";
+import ReactGA from "react-ga4";
 
 // Helper to decode JWT without external library
 const parseJwt = (token: string) => {
@@ -102,9 +104,22 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   return <>{children}</>;
 };
 
+
+
+const PageTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: location.pathname + location.search });
+  }, [location]);
+
+  return null;
+};
+
 function App() {
   return (
     <Router>
+      <PageTracker />
       <div className="App">
         <Routes>
           <Route path="/login" element={<Login />} />
