@@ -8,6 +8,33 @@ RESOURCE_ID="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/prov
 
 echo "Setting up alerts for $APP_INSIGHTS_NAME in $RESOURCE_GROUP..."
 
+# 0. Create Action Group (Notifications)
+ACTION_GROUP_NAME="MindX-Onboarding-Alerts"
+EMAIL_1="tunglam992002@gmail.com"
+EMAIL_2="lamnt01@mindx.com.vn"
+
+echo "Creating Action Group: $ACTION_GROUP_NAME..."
+az monitor action-group create \
+  --name "$ACTION_GROUP_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
+  --short-name "MindXAlerts"
+
+echo "Adding Email Receivers..."
+# Add Personal Email
+az monitor action-group update \
+  --name "$ACTION_GROUP_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
+  --add email_receivers name="PersonalEmail" email_address="$EMAIL_1" use_common_alert_schema=true
+
+# Add Work Email
+az monitor action-group update \
+  --name "$ACTION_GROUP_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
+  --add email_receivers name="WorkEmail" email_address="$EMAIL_2" use_common_alert_schema=true
+
+# Get Action Group ID
+ACTION_GROUP_ID=$(az monitor action-group show --name "$ACTION_GROUP_NAME" --resource-group "$RESOURCE_GROUP" --query id --output tsv)
+
 # 1. Failed Requests > 0
 echo "Creating alert: Failed Requests > 0..."
 az monitor metrics alert create \
@@ -18,6 +45,7 @@ az monitor metrics alert create \
   --window-size 5m \
   --evaluation-frequency 1m \
   --severity 1 \
+  --action "$ACTION_GROUP_ID" \
   --description "Alert when there are failed requests"
 
 # 2. Server Response Time > 1s (1000ms)
@@ -30,6 +58,7 @@ az monitor metrics alert create \
   --window-size 5m \
   --evaluation-frequency 1m \
   --severity 2 \
+  --action "$ACTION_GROUP_ID" \
   --description "Alert when average response time is > 1s"
 
 # 3. Exceptions > 5
@@ -42,6 +71,7 @@ az monitor metrics alert create \
   --window-size 5m \
   --evaluation-frequency 1m \
   --severity 1 \
+  --action "$ACTION_GROUP_ID" \
   --description "Alert when exception count > 5"
 
 echo "Alerts setup complete."
