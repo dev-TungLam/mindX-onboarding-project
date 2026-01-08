@@ -10,22 +10,21 @@ echo "Setting up alerts for $APP_INSIGHTS_NAME in $RESOURCE_GROUP..."
 
 # 0. Create Action Group (Notifications)
 ACTION_GROUP_NAME="MindX-Onboarding-Alerts"
-EMAIL_1="tunglam992002@gmail.com"
 EMAIL_2="lamnt01@mindx.com.vn"
 
-echo "Creating Action Group: $ACTION_GROUP_NAME..."
+echo "Re-creating Action Group: $ACTION_GROUP_NAME..."
+# Delete existing to remove old receivers (e.g. personal email)
+az monitor action-group delete \
+  --name "$ACTION_GROUP_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
+
+# Create fresh
 az monitor action-group create \
   --name "$ACTION_GROUP_NAME" \
   --resource-group "$RESOURCE_GROUP" \
   --short-name "MindXAlerts"
 
 echo "Adding Email Receivers..."
-# Add Personal Email
-az monitor action-group update \
-  --name "$ACTION_GROUP_NAME" \
-  --resource-group "$RESOURCE_GROUP" \
-  --add email_receivers name="PersonalEmail" email_address="$EMAIL_1" use_common_alert_schema=true
-
 # Add Work Email
 az monitor action-group update \
   --name "$ACTION_GROUP_NAME" \

@@ -214,7 +214,6 @@ Monitored conditions:
 
 **Notifications**:
 Alerts are configured to obtain emails for:
-- `tunglam992002@gmail.com`
 - `lamnt01@mindx.com.vn` (Work)
 
 
