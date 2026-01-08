@@ -200,14 +200,17 @@ VITE_GA_MEASUREMENT_ID='G-...'
 ```
 
 #### Alerts
-To setup recommended alerts on Azure:
+Alerts have been setup programmatically using the `setup-alerts.sh` script.
 
-1. Go to **Monitor** > **Alerts** in Azure Portal.
-2. Create a new Alert Rule for the App Insights resource.
-3. Signals to monitor:
-    - **Failed Requests**: Count > 0 (Severity: High)
-    - **Server Response Time**: Average > 1s (Severity: Warning)
-    - **Exceptions**: Count > 5 (Severity: High)
+To recreate them:
+```bash
+./setup-alerts.sh
+```
+
+Monitored conditions:
+- **Failed Requests**: Count > 0 (Severity: High)
+- **Server Response Time**: Average > 1s (Severity: Warning)
+- **Exceptions**: Count > 5 (Severity: High)
 
 ### Verification & Access
 
