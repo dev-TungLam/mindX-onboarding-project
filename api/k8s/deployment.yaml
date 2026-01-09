@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: mindxprobationarc.azurecr.io/api:v11
+          image: mindxprobationarc.azurecr.io/api:v12
           env:
             - name: CLIENT_SECRET
               valueFrom:
