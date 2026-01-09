@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: mindxprobationarc.azurecr.io/api:v10
+          image: mindxprobationarc.azurecr.io/api:v11
           env:
             - name: CLIENT_SECRET
               valueFrom:
@@ -26,6 +26,10 @@ spec:
                 secretKeyRef:
                   name: api-secrets
                   key: APP_INSIGHTS_CONNECTION_STRING
+            - name: REDIRECT_URI
+              value: "https://mindx-devtunglam.52.234.236.158.nip.io/api/auth/callback"
+            - name: FRONTEND_CALLBACK_URL
+              value: "https://mindx-devtunglam.52.234.236.158.nip.io/login/callback"
           ports:
             - containerPort: 3000
           resources:

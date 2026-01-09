@@ -7,6 +7,8 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
+ARG VITE_GA_MEASUREMENT_ID
+ENV VITE_GA_MEASUREMENT_ID=$VITE_GA_MEASUREMENT_ID
 RUN npm run build
 
 # Production Stage
