@@ -105,9 +105,12 @@ kubectl create secret generic api-secrets \
 
 **Web (Frontend)**:
 ```bash
+```bash
 cd web
-docker build -t mindxprobationarc.azurecr.io/web:v8 .
-docker push mindxprobationarc.azurecr.io/web:v8
+docker build \
+  --build-arg VITE_GA_MEASUREMENT_ID='YOUR_MEASUREMENT_ID' \
+  -t mindxprobationarc.azurecr.io/web:v9 .
+docker push mindxprobationarc.azurecr.io/web:v9
 ```
 
 **API (Backend)**:
