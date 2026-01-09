@@ -47,23 +47,24 @@ FRONTEND_CALLBACK_URL=http://localhost:5173/login/callback
 For the deployed version, the following values were used:
 
 #### Redirect URIs
-| Variable | Production Value |
-| :--- | :--- |
-| `REDIRECT_URI` | `https://mindx-devtunglam.52.234.236.158.nip.io/api/auth/callback` |
-| `FRONTEND_CALLBACK_URL` | `https://mindx-devtunglam.52.234.236.158.nip.io/login/callback` |
+
+| Variable                  | Production Value                                                     |
+| :------------------------ | :------------------------------------------------------------------- |
+| `REDIRECT_URI`          | `https://mindx-devtunglam.52.234.236.158.nip.io/api/auth/callback` |
+| `FRONTEND_CALLBACK_URL` | `https://mindx-devtunglam.52.234.236.158.nip.io/login/callback`    |
 
 ## Authentication Flow
 
 This project implements the **Authorization Code Flow** with OpenID Connect:
 
-1.  **Initiate Login**: User clicks "Login" on the frontend. The browser is redirected to the API's `/api/auth/login` endpoint.
-2.  **Redirect to IDP**: The API constructs the authorization URL and redirects the user to the MindX Identity Provider.
-3.  **User Authentication**: The user logs in with their credentials at the MindX IDP.
-4.  **Callback to API**: Upon success, the IDP redirects back to the API (`REDIRECT_URI`) with an authorization `code`.
-5.  **Token Exchange**: The API exchanges this `code` for an `access_token` and `id_token` by communicating directly with the IDP.
-6.  **Session Creation**: The API validates the tokens and creating a session (or passing the token forward).
-7.  **Redirect to Frontend**: The API redirects the user back to the Frontend (`FRONTEND_CALLBACK_URL`), passing the `id_token` as a URL query parameter.
-8.  **Frontend Session**: The Frontend parses the token, stores it (e.g., in localStorage), and updates the UI to the authenticated state.
+1. **Initiate Login**: User clicks "Login" on the frontend. The browser is redirected to the API's `/api/auth/login` endpoint.
+2. **Redirect to IDP**: The API constructs the authorization URL and redirects the user to the MindX Identity Provider.
+3. **User Authentication**: The user logs in with their credentials at the MindX IDP.
+4. **Callback to API**: Upon success, the IDP redirects back to the API (`REDIRECT_URI`) with an authorization `code`.
+5. **Token Exchange**: The API exchanges this `code` for an `access_token` and `id_token` by communicating directly with the IDP.
+6. **Session Creation**: The API validates the tokens and creating a session (or passing the token forward).
+7. **Redirect to Frontend**: The API redirects the user back to the Frontend (`FRONTEND_CALLBACK_URL`), passing the `id_token` as a URL query parameter.
+8. **Frontend Session**: The Frontend parses the token, stores it (e.g., in localStorage), and updates the UI to the authenticated state.
 
 ### Flow Diagram
 
@@ -104,6 +105,7 @@ kubectl create secret generic api-secrets \
 ### 1. Build and Push Images
 
 **Web (Frontend)**:
+
 ```bash
 ```bash
 cd web
@@ -114,6 +116,7 @@ docker push mindxprobationarc.azurecr.io/web:v9
 ```
 
 **API (Backend)**:
+
 ```bash
 cd api
 docker build -t mindxprobationarc.azurecr.io/api:v8 .
@@ -157,23 +160,25 @@ cd api && npm run dev
 ### Developer Workflow
 
 #### 1. Making Changes
+
 - **Backend**: Edit files in `api/src`. Use `curl` or Postman to test endpoints. Use the [Debug Routes](#testing) to simulate errors.
 - **Frontend**: Edit files in `web/src`. Changes hot-reload. Verify GA tracking in the browser console (if enabled).
 
 #### 2. Releasing
-To deploy changes to the live environment:
-1.  **Commit changes**:
-    ```bash
-    git add .
-    git commit -m "feat: description of changes"
-    ```
-2.  **Push to main**:
-    ```bash
-    git push origin main
-    ```
-3.  **Monitor Pipeline**: Check your GitHub Actions / Azure DevOps pipeline for build status.
-4.  **Verify Live**: Once deployed, visit the [Live Demo](https://mindx-devtunglam.52.234.236.158.nip.io) to confirm updates.
 
+To deploy changes to the live environment:
+
+1. **Commit changes**:
+   ```bash
+   git add .
+   git commit -m "feat: description of changes"
+   ```
+2. **Push to main**:
+   ```bash
+   git push origin main
+   ```
+3. **Monitor Pipeline**: Check your GitHub Actions / Azure DevOps pipeline for build status.
+4. **Verify Live**: Once deployed, visit the [Live Demo](https://mindx-devtunglam.52.234.236.158.nip.io) to confirm updates.
 
 ## Week 1: App Set Up on Azure Cloud
 
@@ -182,16 +187,19 @@ To deploy changes to the live environment:
 ### Achievements
 
 #### Infrastructure
+
 - Set up **Azure Kubernetes Service (AKS)** cluster.
 - Configured **Ingress Controller** for external access.
 - Implemented **HTTPS/SSL** with Cert-Manager and Let's Encrypt.
 
 #### Application
+
 - Developed and containerized **Node.js/Express API** (Backend).
 - Developed and containerized **React Web App** (Frontend).
 - Deployed full-stack application to AKS.
 
 #### Authentication & Security
+
 - Integrated **OpenID Connect** authentication (using MindX IDP).
 - Secured API endpoints with JWT validation.
 - Implemented protected routes on the Client.
@@ -203,80 +211,89 @@ To deploy changes to the live environment:
 ### Achievements
 
 #### Production Metrics (Azure App Insights)
+
 - Integrated **Application Insights** with the API.
 - Configured logging for Requests, Exceptions, and System performance.
 
 #### Product Metrics (Google Analytics)
+
 - Integrated **Google Analytics 4** with the Frontend.
 - Implemented **Page View Tracking** on route changes.
 
 ### Configuration
 
 #### Credentials
+
 Add the following to your `.env` files:
 
 **API (`api/.env`):**
+
 ```env
 APP_INSIGHTS_CONNECTION_STRING='InstrumentationKey=...'
 ```
 
 **Web (`web/.env`):**
+
 ```env
 VITE_GA_MEASUREMENT_ID='G-...'
 ```
 
 #### Alerts
+
 Alerts have been setup programmatically using the `setup-alerts.sh` script.
 
 To recreate them:
+
 ```bash
 ./setup-alerts.sh
 ```
 
 Monitored conditions:
+
 - **Failed Requests**: Count > 0 (Severity: High)
 - **Server Response Time**: Average > 1s (Severity: Warning)
 - **Exceptions**: Count > 5 (Severity: High)
 
 **Notifications**:
 Alerts are configured to obtain emails for:
-- `lamnt01@mindx.com.vn` (Work)
 
+- `lamnt01@mindx.com.vn` (Work)
 
 ### Verification & Access
 
 #### Azure App Insights (Production Metrics)
+
 1. Log in to the [Azure Portal](https://portal.azure.com).
 2. Navigate to your **Application Insights** resource.
 3. Access:
-    - **Live Metrics**: For real-time monitoring of requests and failures.
-    - **Transaction Search**: To view specific logs and traces.
-    - **Failures**: To diagnose exceptions.
-    - **Performance**: To analyze server response times.
+   - **Live Metrics**: For real-time monitoring of requests and failures.
+   - **Transaction Search**: To view specific logs and traces.
+   - **Failures**: To diagnose exceptions.
+   - **Performance**: To analyze server response times.
 
 #### Google Analytics (Product Metrics)
+
 1. Go to [Google Analytics](https://analytics.google.com).
 2. Select the property corresponding to the Measurement ID.
 3. Access:
-    - **Realtime**: To see current active users.
-    - **Life Cycle > Engagement > Pages and screens**: To view page view counts (`/login`, `/`, etc.).
+   - **Realtime**: To see current active users.
+   - **Realtime Pages**: To view page view counts (`/login`, `/`, etc.).
 
 ### Testing
+
 To trigger the alerts, use the following debug endpoints (available in local and dev):
 
 1. **Trigger "High Failed Requests" & "Exceptions"**:
+
    ```bash
    curl http://localhost:3000/debug/error
    ```
    *Action*: Throws a 500 error.
    *Wait*: ~5-10 mins for App Insights to aggregate.
-
 2. **Trigger "High Response Time"**:
+
    ```bash
    curl http://localhost:3000/debug/slow
    ```
    *Action*: Delays response by 2 seconds.
    *Wait*: ~5-10 mins for App Insights to see the average spike.
-
-
-
