@@ -5,7 +5,8 @@ import './index.css'
 import App from './App.tsx'
 
 // Initialize Google Analytics
-const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID;
+// Hardcoded fallback to ensure it works in production Docker build
+const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID || "G-S22QMLNYRJ";
 if (measurementId) {
   ReactGA.initialize(measurementId);
 }
