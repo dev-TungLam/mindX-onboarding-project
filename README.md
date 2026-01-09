@@ -95,7 +95,8 @@ To deploy the API successfully, you must manually create the `api-secrets` secre
 
 ```bash
 kubectl create secret generic api-secrets \
-  --from-literal=CLIENT_SECRET='YOUR_ACTUAL_CLIENT_SECRET_BP64'
+  --from-literal=CLIENT_SECRET='YOUR_ACTUAL_CLIENT_SECRET_BP64' \
+  --from-literal=APP_INSIGHTS_CONNECTION_STRING='InstrumentationKey=...'
 ```
 
 ## Deployment
@@ -146,8 +147,30 @@ To run locally with the production redirect URI, you may need to use `port-forwa
 cd web && npm run dev
 
 # Backend
+# Backend
 cd api && npm run dev
 ```
+
+### Developer Workflow
+
+#### 1. Making Changes
+- **Backend**: Edit files in `api/src`. Use `curl` or Postman to test endpoints. Use the [Debug Routes](#testing) to simulate errors.
+- **Frontend**: Edit files in `web/src`. Changes hot-reload. Verify GA tracking in the browser console (if enabled).
+
+#### 2. Releasing
+To deploy changes to the live environment:
+1.  **Commit changes**:
+    ```bash
+    git add .
+    git commit -m "feat: description of changes"
+    ```
+2.  **Push to main**:
+    ```bash
+    git push origin main
+    ```
+3.  **Monitor Pipeline**: Check your GitHub Actions / Azure DevOps pipeline for build status.
+4.  **Verify Live**: Once deployed, visit the [Live Demo](https://mindx-devtunglam.52.234.236.158.nip.io) to confirm updates.
+
 
 ## Week 1: App Set Up on Azure Cloud
 

@@ -21,6 +21,11 @@ spec:
                 secretKeyRef:
                   name: api-secrets
                   key: CLIENT_SECRET
+            - name: APP_INSIGHTS_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: APP_INSIGHTS_CONNECTION_STRING
           ports:
             - containerPort: 3000
           resources:
